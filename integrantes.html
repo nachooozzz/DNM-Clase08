@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="es">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <link rel="stylesheet" href="style.css" />
+        <title>DNOO37 | EVALUACIÓN Nº2</title>
+    </head>
+    <body>
+        <nav>
+            <h1><a href="index.html">IGNACIO ALARCÓN</a></h1>
+            <select onchange="location = this.value;">
+                <option value="index.html">INDEX</option>
+                <option value="integrantes.html" selected>INTEGRANTES</option>
+                <option value="openweather.html">OPEN WEATHER</option>
+                <option value="picture.html">PICTURE OF THE DAY</option>
+                <option value="sismico.html">SÍSMICO</option>
+            </select>
+        </nav>
+        <header style="display: none;">
+            <div>Marque uno:</div>
+            <div><input type="radio" name="selecciona" value="todos" checked />Todos</div>
+            <div><input type="radio" name="selecciona" value="Escorpio" />Escorpio</div>
+            <div><input type="radio" name="selecciona" value="Acuario" />Acuario</div>
+            <div><input type="radio" name="selecciona" value="Tauro" />Tauro</div>
+            <div><input type="radio" name="selecciona" value="Leo" />Leo</div>
+        </header>
+        <aside></aside>
+        <main></main>
+        <script>
+            const alternativas = document.querySelector("header");
+            const detalles = document.querySelector("aside");
+            const respuesta = document.querySelector("main");
+            var datos;
+            async function estudiantes() {
+                const data = await fetch("https://raw.githubusercontent.com/profesorfaco/dno037-2023-2/main/clase-07/_curso.json");
+                datos = await data.json();
+                alternativas.removeAttribute("style");
+                console.log(datos);
+                signos = [];
+                datos.forEach((x) => {
+                    if(x.github !== ""){
+                        respuesta.innerHTML += `<article><div><img src="${x.avatar}"></div><div><p><a href="integrante.html?lista=${x.lista}">${x.nombres.split(" ")[0]} ${x.apellidos.split(" ")[0]}</a></p><p>${
+                            x.zodiaco.signo
+                        }</p></div></article>`;
+                        signos.push(x.zodiaco.signo);
+                    }
+                });
+
+
+    const counts = {};
+    signos.forEach((x) => {
+      counts[x] = (counts[x] || 0) + 1;
+    });
+    console.log(counts)
+
+
+
+            }
+            estudiantes().catch((error) => console.error(error));
+
+            function compatibilidad(valor) {
+                respuesta.innerHTML = ``;
+                detalles.innerHTML = ``;
+
+                //Lo que sigue lo saqué de https://www.lanacion.com.ar/
+
+                if (valor == "Escorpio") {
+                    about =
+                        "<em>Escorpio</em>: Las personas de Escorpio pertenecen junto a Cáncer y Piscis al elemento Agua. Esto les otorga una personalidad directamente relacionada con los sentimientos. Simboliza a las emociones, logrando que sean personas intensas y profundas, difíciles de descifrar. Si caen, se levantan y buscan transformarse en su mejor versión para no cometer los mismos errores. Son perseverantes y su mente abierta les permite aventurarse en nuevos desafíos.";
+                } else if (valor == "Acuario") {
+                    about =
+                        "<em>Acuario</em>: El signo más independiente del Zodiaco, pertenece al elemento Aire y está regido por el planeta Urano. Las personas de este signo poseen una fuerte y libre personalidad que los impulsa a revelarse contra toda actitud convencional y restrictiva. Idealistas e innovadores, siempre poseen un punto de vista original y contrario a las mentalidades conservadoras y no dudarán en imponerlo aunque se los juzgue de rebeldes y arriesgados.";
+                } else if (valor == "Tauro") {
+                    about =
+                        "<em>Tauro</em>: Pertenece al elemento Tierra, con lo cual es práctico, ordenado, trabajador, ambicioso, serio y pragmático. Se compromete con lo que hace y sigue hasta el final con persistencia, sin prisa ni pausa. Esta virtud, la de ser consecuente en todo, se puede convertir en defecto cuando se vuelve incapaz de adaptarse al devenir, a los cambios que irremediablemente se presentan en la vida.";
+                } else if (valor == "Leo"){
+                    about =
+                        "<em>Leo</em>: Quienes nacen bajo el signo de Leo son personas seguras de sí mismo, que irradian fuerza, confianza y alegría de vivir. El Sol, la estrella central de nuestro sistema planetario, es el astro que rige a Leo y le da energía, luz y autoridad que derrama por donde pasa, concediéndole sus atributos de majestad, poder, iniciativa, nobleza y capacidad creadora. El león que lo representa es símbolo de fuerza, dominio y virilidad";
+                } else {
+                    about = "Diseño y nuevos medios."
+                }
+
+                detalles.innerHTML += `<div><p>${about}</p></div>`;
+
+                datos.forEach((x) => {
+                    if (valor == x.zodiaco.signo) {
+                        respuesta.innerHTML += `<article><div><img src="${x.avatar}"></div><div><p><a href="integrante.html?lista=${x.lista}">${x.nombres.split(" ")[0]} ${x.apellidos.split(" ")[0]}</a></p><p>${
+                            x.zodiaco.signo
+                        }</p></div></article>`;
+                    }
+                });
+            }
+
+            const seleccionado = document.querySelectorAll('input[name="selecciona"]');
+
+            seleccionado.forEach((i) => {
+                i.addEventListener("change", function () {
+                    var valor = this.value;
+                    if (valor !== "todos"){
+                        console.log(valor);
+                        compatibilidad(valor);
+                    } else {
+                        window.location.reload();
+                    }
+                });
+            });
+        </script>
+    </body>
+</html>
